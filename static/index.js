@@ -71,7 +71,9 @@ class Repos extends Component {
                                 h('td',undefined,
                                     h('a',{href:r.url,target:'_blank'},r.url)
                                 ),
-                                h('td',undefined,r.type),
+                                h('td',undefined,
+                                    h('a',{href:`repo/${r.type}/config`,target:'_blank'},r.type)
+                                ),
                                 h('td',undefined,
                                     h('a',{class:'btn chip',href:`backup/${r.name}/full.tar.gz`,target:'_blank'},'Full'),
                                     h('a',{class:'btn chip',href:`backup/${r.name}/incremental.tar.gz`,target:'_blank'},'Incremental'),

@@ -21,6 +21,7 @@ const args = parser.parse_args()
 
 const REPO_TYPES = ['npm','yum','conda','pip']
 
+const ENCODING = 'utf-8'
 const TRAILING_SLASH_RE = /\/$/
 const ES = '', SL = '/', DS = '$', CS = ', '
 
@@ -89,7 +90,7 @@ fs.mkdirpSync(filepath)
 
 logger.info('initializing db')
 try{
-    db.exec(fs.readFileSync(path.join(__dirname,'init.sql'), 'utf-8'))
+    db.exec(fs.readFileSync(path.join(__dirname,'init.sql'), ENCODING))
     db.prepare('insert into repos(name,url,type) values (?,?,?)').run(DOCKER.reponame,DOCKER.url,DOCKER.reponame)
 }catch(e){
     logger.error(e)
@@ -134,7 +135,6 @@ const proxy = (reponame, opts, req, res) => {
     let p = req2Path(req)
     logger.debug(`fetching file ${p} from ${opts.url} ${opts.method}`)
     return axios(opts).then(response => {
-        console.log(opts.headers, response.headers, opts.url, response.data.toString())
         axios2Express(response,res)
         let data = response.data
         switch(reponame){
@@ -252,6 +252,17 @@ app.get('/backup/:name/incremental.tar.gz',(req,res,next) => {
     }
     db.prepare('insert into backups (reponame) values (?)').run(req.params.name)
     tar.c({gzip:true},files.map(f => relatizePath(f.filename))).pipe(res)
+})
+
+app.get('/repo/:type/config',(req,res,next) => {
+    try{
+        const file = fs.readFileSync(path.join(__dirname,'repo_files',req.params.type+'.repo'), ENCODING)
+            .replaceAll('$host',ip.address())
+            .replaceAll('$port',args.port)
+        res.send(file)
+    }catch(e){
+        next(e)
+    }
 })
 
 app.use(express.json())
