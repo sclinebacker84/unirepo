@@ -42,6 +42,7 @@ class Repos extends Component {
     async submit(e){
         e.preventDefault()
         await request('repo',this.state.form)
+        this.clear(e)
         await this.repos()
     }
     clear(e){

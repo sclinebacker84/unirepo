@@ -1,16 +1,31 @@
-#http://mirror.centos.org/centos/
 [os]
-baseurl=http://172.31.33.144:8080/repository/yum/centos-7/$releasever/os/$basearch
+baseurl=http://$host/repository/yum/centos/$releasever/os/$basearch
 gpgcheck=0
 
-[centosplus]
-baseurl=http://172.31.33.144:8080/repository/yum/centos-7/$releasever/centosplus/$basearch
+[centosplus]    
+baseurl=http://$host/repository/yum/centos/$releasever/centosplus/$basearch
 gpgcheck=0
 
 [updates]
-baseurl=http://172.31.33.144:8080/repository/yum/centos-7/$releasever/updates/$basearch
+baseurl=http://$host/repository/yum/centos/$releasever/updates/$basearch
 gpgcheck=0
 
 [extras]
-baseurl=http://172.31.33.144:8080/repository/yum/centos-7/$releasever/extras/$basearch
+baseurl=http://$host/repository/yum/centos/$releasever/extras/$basearch
+gpgcheck=0
+
+[scl]
+baseurl=http://$host/repository/yum/centos/$releasever/sclo/$basearch/sclo
+gpgcheck=0
+
+[scl-rh]
+baseurl=http://$host/repository/yum/centos/$releasever/sclo/$basearch/rh
+gpgcheck=0
+
+[epel]
+baseurl=http://$host/repository/epel/epel/$releasever/$basearch
+gpgcheck=0
+
+[mono]
+baseurl=http://$host/repository/mono/repo/centos7-stable
 gpgcheck=0
