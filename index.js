@@ -13,10 +13,14 @@ const sha256File = require('sha256-file')
 const multer = require('multer')
 const Duplex = require('stream').Duplex
 const {ArgumentParser} = require('argparse')
+const glob = require('glob')
+const moment = require('moment');
+const { npm } = require('winston/lib/winston/config');
 
 const parser = new ArgumentParser()
 parser.add_argument("-p","--port",{type:'int',default:8080})
 parser.add_argument("-l","--loglevel",{type:'str',default:'info',choices:['info','debug']})
+parser.add_argument("-c","--cacheonly",{type:'int',default:0,choices:[0,1]})
 const args = parser.parse_args()
 
 const REPO_TYPES = ['npm','yum','conda','pip']
@@ -97,6 +101,15 @@ try{
 }
 logger.info('initdb complete')
 
+logger.info('generating template files')
+glob(path.join(__dirname,'repo_files','*.template'),undefined,(e,files) => {
+    files.forEach(file => {
+        logger.debug(`processing template file ${file}`)
+        fs.writeFileSync(file.replace('.template', ES), fs.readFileSync(file,ENCODING).replaceAll('$host',ip.address()).replaceAll('$port',args.port))
+    })
+    logger.info('generated template files')
+})
+
 const app = express()
 
 app.use(express.static(path.join(__dirname,'static')))
@@ -104,6 +117,7 @@ app.use('/browse/repos',serveIndex(repopath,{icons:true,view:'details'}))
 app.use('/browse/repos',express.static(repopath))
 app.use('/browse/files',serveIndex(filepath,{icons:true,view:'details'}))
 app.use('/browse/files',express.static(filepath))
+app.use('/browse/repo_files',express.static(path.join(__dirname,'repo_files')))
 
 const addFile = db.prepare('insert into files(filename,reponame,md5) values(:filename,:reponame,:md5) on conflict(filename,reponame) do update set md5 = :md5')
 const getRepo = db.prepare('select type,url from repos where name = ?')
@@ -111,7 +125,7 @@ const getRepo = db.prepare('select type,url from repos where name = ?')
 const req2Path = req => {
     const reponame = req.params.name || DOCKER.reponame
     let p = path.join(repopath,reponame,req.path)
-    switch(reponame){
+    switch(getRepo.get(reponame).type){
         case 'npm':
             p = !req.path.substring(1).includes(SL) ? p.replace(req.path, req.path+DS) : p
             break
@@ -137,7 +151,7 @@ const proxy = (reponame, opts, req, res) => {
     return axios(opts).then(response => {
         axios2Express(response,res)
         let data = response.data
-        switch(reponame){
+        switch(getRepo.get(reponame).type){
             case 'pip':
                 data = data.toString().replaceAll(PYTHON_HOSTED.url,`http://${ip.address()}:${args.port}/repository/${req.params.name}${PYTHON_HOSTED.suffix}`)
                 break
@@ -176,6 +190,9 @@ const CACHE_HANDLERS = {
 }
 const MOD_ERR_HANDLERS = {
     docker:(err,req,res,next) => {
+        if(!err.response){
+            return next(err)
+        }
         let h = err.response.headers[DOCKER.headers.authenticate]
         err.response.headers[DOCKER.headers.authenticate] = err.response.headers[DOCKER.headers.authenticate].replace(DOCKER.service, DOCKER.host)
         axios2Express(err.response,res)
@@ -190,41 +207,47 @@ const MOD_ERR_HANDLERS = {
 const checkCache = (req,res,next) => {
     const p = req2Path(req)
     const reponame = req.params.name || DOCKER.reponame
-    const isDocker = reponame == DOCKER.reponame
     logger.debug(`looking for file: ${p} for repo: ${reponame}`)
     if(fs.pathExistsSync(p)){
         const f = fs.lstatSync(p)
         logger.debug(`found cached file: ${p}`)
-        if(isDocker){
-            CACHE_HANDLERS.docker(p,req,res)
-        }else{
-            CACHE_HANDLERS[getRepo.get(reponame)] && CACHE_HANDLERS[getRepo.get(reponame)](p,req,res)
-        }
+        const h = CACHE_HANDLERS[getRepo.get(reponame).type]
+        h && h(p,req,res)
         if(f.isFile()){
             res.sendFile(p)
         }else{
             res.sendStatus(200)
         }
+    }else if(args.cacheonly){
+        res.sendStatus(404)
     }else{
         next()
     }
 }
 const modCache = (req,res,next) => {
-    const isDocker = !req.params.name
-    const reponame = isDocker ? DOCKER.reponame : req.params.name
+    const reponame = req.params.name || DOCKER.reponame
+    const t = getRepo.get(reponame)
     const opts = {
         method:req.method,
-        url:(!isDocker ? getRepo.get(req.params.name).url.replace(TRAILING_SLASH_RE,ES) : DOCKER.url)+req.path,
-        responseType:isDocker && req.path.includes('blobs') ? 'stream' : 'arraybuffer',
+        url:t.url.replace(TRAILING_SLASH_RE,ES) + req.path,
+        responseType:'arraybuffer',
         headers:extend({'connection':'close'},req.headers,SKIP_HEADERS)
     }
-    if(isDocker && DOCKER.tokens.value){
-        opts.headers.authorization = `Bearer ${DOCKER.tokens.value}`
-        if(opts.headers.accept){
-            opts.headers.accept = opts.headers.accept.split(CS).filter(p => !DOCKER.headers.badAccept.has(p)).join(CS)
-        }
+    switch(t.type){
+        case 'docker':
+            opts.url = DOCKER.url + req.path
+            if(req.path.includes('blobs')){
+                opts.responseType = 'stream'
+            }
+            if(DOCKER.tokens.value && req.method != 'HEAD'){
+                opts.headers.authorization = `Bearer ${DOCKER.tokens.value}`
+                if(opts.headers.accept){
+                    opts.headers.accept = opts.headers.accept.split(CS).filter(p => !DOCKER.headers.badAccept.has(p)).join(CS)
+                }
+            }
+            break
     }
-    proxy(reponame, opts, req, res).catch(err => MOD_ERR_HANDLERS[reponame] ? MOD_ERR_HANDLERS[reponame](err,req,res,next) : next(err))
+    proxy(reponame, opts, req, res).catch(err => MOD_ERR_HANDLERS[t.type] ? MOD_ERR_HANDLERS[t.type](err,req,res,next) : next(err))
 }
 
 app.use('/repository/:name', checkCache, modCache)
@@ -237,11 +260,15 @@ const relatizePath = (p) => path.relative(__dirname,p)
 
 const fullBackup = (req,res,next) => {
     db.prepare('insert into backups (reponame) values (?)').run(req.params.name)
-    tar.c({gzip:true},[relatizePath(path.join(repopath,req.params.name))]).pipe(res)
+    res.set('content-disposition',`attachment; filename=${req.params.name}.full.tar.gz`)
     logger.info(`performing full backup of ${req.params.name} repo`)
+    const stream = tar.c({gzip:true},[relatizePath(path.join(repopath,req.params.name))]).pipe(res)
+    stream.on('finish',() => {
+        logger.info(`done performing full backup of ${req.params.name} repo`)
+    })
 }
-app.get('/backup/:name/full.tar.gz',fullBackup)
-app.get('/backup/:name/incremental.tar.gz',(req,res,next) => {
+app.get('/backup/full/:name',fullBackup)
+app.get('/backup/incremental/:name',(req,res,next) => {
     const backup = db.prepare('select ran_on from backups where reponame = ? order by ran_on desc limit 1').get(req.params.name)
     if(!backup){
         return fullBackup(req,res,next)
@@ -251,18 +278,12 @@ app.get('/backup/:name/incremental.tar.gz',(req,res,next) => {
         return res.sendStatus(200)
     }
     db.prepare('insert into backups (reponame) values (?)').run(req.params.name)
-    tar.c({gzip:true},files.map(f => relatizePath(f.filename))).pipe(res)
-})
-
-app.get('/repo/:type/config',(req,res,next) => {
-    try{
-        const file = fs.readFileSync(path.join(__dirname,'repo_files',req.params.type+'.repo'), ENCODING)
-            .replaceAll('$host',ip.address())
-            .replaceAll('$port',args.port)
-        res.send(file)
-    }catch(e){
-        next(e)
-    }
+    res.set('content-disposition',`attachment; filename=${req.params.name}.${moment().toString()}.incremental.tar.gz`)
+    logger.info(`performing incremental backup of ${req.params.name} repo`)
+    const stream = tar.c({gzip:true},files.map(f => relatizePath(f.filename))).pipe(res)
+    stream.on('finish', () => {
+        logger.info(`done performing incremental backup of ${req.params.name} repo`)
+    })
 })
 
 app.use(express.json())

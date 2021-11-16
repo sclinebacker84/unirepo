@@ -72,11 +72,11 @@ class Repos extends Component {
                                     h('a',{href:r.url,target:'_blank'},r.url)
                                 ),
                                 h('td',undefined,
-                                    h('a',{href:`repo/${r.type}/config`,target:'_blank'},r.type)
+                                    h('a',{href:`browse/repo_files/${r.type}.repo`,target:'_blank'},r.type)
                                 ),
                                 h('td',undefined,
-                                    h('a',{class:'btn chip',href:`backup/${r.name}/full.tar.gz`,target:'_blank'},'Full'),
-                                    h('a',{class:'btn chip',href:`backup/${r.name}/incremental.tar.gz`,target:'_blank'},'Incremental'),
+                                    h('a',{class:'btn chip',href:`backup/full/${r.name}`,target:'_blank'},'Full'),
+                                    h('a',{class:'btn chip',href:`backup/incremental/${r.name}`,target:'_blank'},'Incremental'),
                                     h('button',{class:'btn chip',onClick:e => this.rebuild(r)},'Rebuild')
                                 )
                             ))
