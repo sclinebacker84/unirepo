@@ -1,14 +1,4 @@
 # unirepo
-
-## Building better-sqlite3 dependency
- - Python 3.x (recommend using conda)
- ```
- yum install centos-release-scl -y
- yum groupinstall 'Development Tools'
- yum install devtoolset-7 -y
- scl enable devtoolset-7 bash
- npm install node-gyp
- npm install better-sqlite3 
  ```
 ## Creating a new centos client workstation to "populate" the cache
 - copy the .repo files from repo_files to their appropriate locations on the workstation
@@ -56,3 +46,14 @@ pip install python-dateutil pyyaml pandas scikit-learn pyinstaller pyarmor simpl
   - 7.14.2
 - library/alpine
   - 3.14.3
+  
+## Building better-sqlite3 dependency
+ - Python 3.x (recommend using conda)
+ ```
+ yum install centos-release-scl -y
+ rm -f /etc/yum.repos.d/Cent* /etc/yum.repos.d/epel*
+ yum groupinstall 'Development Tools'
+ yum install devtoolset-7 -y
+ scl enable devtoolset-7 bash
+ npm install node-gyp
+ npm install better-sqlite3
