@@ -14,5 +14,4 @@ insert into repos(name,url,type) values
 ('mono','https://download.mono-project.com/','yum'),
 ('conda','https://repo.anaconda.com','conda'),
 ('pip','https://pypi.org/','pip'),
-('pip-python-hosted','https://files.pythonhosted.org','python-hosted'),
 ('npm','https://registry.npmjs.org/','npm')

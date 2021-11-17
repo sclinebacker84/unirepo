@@ -50,7 +50,13 @@ class Repos extends Component {
         this.initForm()
     }
     rebuild(r){
-        request(`rebuild/${r.name}`,undefined,'POST').then(info => alert(`rebuilt ${info.count} files`))
+        r.loading = true
+        this.setState(this.state)
+        request(`rebuild/${r.name}`,undefined,'POST').then(info => {
+            r.loading = false
+            this.setState(this.state)
+            alert(`rebuilt ${info.count} files`)
+        })
     }
     render(){
         return h('div',{class:'container'},
@@ -77,7 +83,7 @@ class Repos extends Component {
                                 h('td',undefined,
                                     h('a',{class:'btn chip',href:`backup/full/${r.name}`,target:'_blank'},'Full'),
                                     h('a',{class:'btn chip',href:`backup/incremental/${r.name}`,target:'_blank'},'Incremental'),
-                                    h('button',{class:'btn chip',onClick:e => this.rebuild(r)},'Rebuild')
+                                    h('button',{class:'btn chip '+(r.loading ? 'loading' : ES),onClick:e => this.rebuild(r)},'Rebuild')
                                 )
                             ))
                         )

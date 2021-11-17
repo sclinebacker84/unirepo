@@ -31,7 +31,7 @@ const ES = '', SL = '/', DS = '$', CS = ', '
 
 const PYTHON_HOSTED = {
     url:'https://files.pythonhosted.org',
-    suffix:'-python-hosted'
+    packages:'/files'
 }
 const DOCKER = {
     url:'https://registry-1.docker.io',
@@ -52,6 +52,7 @@ const DOCKER = {
         refresh:(scope) => axios.get('https://auth.docker.io/token',{params:{scope,service:DOCKER.service}}).then(response => DOCKER.tokens.value = response.data.token)
     }
 }
+const REPOBASE = '/repository'
 
 const SKIP_HEADERS = ['connection','content-length','host']
 
@@ -124,16 +125,15 @@ const getRepo = db.prepare('select type,url from repos where name = ?')
 
 const req2Path = req => {
     const reponame = req.params.name || DOCKER.reponame
-    let p = path.join(repopath,reponame,req.path)
+    const p = path.join(repopath,reponame,req.path)
     switch(getRepo.get(reponame).type){
         case 'npm':
-            p = !req.path.substring(1).includes(SL) ? p.replace(req.path, req.path+DS) : p
-            break
+            return !req.path.substring(1).includes(SL) ? p+DS : p
         case 'pip':
-            p = p.replace(TRAILING_SLASH_RE, ES)
-            break
+            return p.replace(TRAILING_SLASH_RE, ES)
+        default:
+            return p
     }
-    return p
 }
 const buffer2Stream = buffer => {
     const stream = new Duplex()
@@ -153,7 +153,9 @@ const proxy = (reponame, opts, req, res) => {
         let data = response.data
         switch(getRepo.get(reponame).type){
             case 'pip':
-                data = data.toString().replaceAll(PYTHON_HOSTED.url,`http://${ip.address()}:${args.port}/repository/${req.params.name}${PYTHON_HOSTED.suffix}`)
+                if(!req.path.startsWith(PYTHON_HOSTED.packages)){
+                    data = data.toString().replaceAll(PYTHON_HOSTED.url,path.join(REPOBASE,reponame,PYTHON_HOSTED.packages))
+                }
                 break
         }
         data = isStream(data) ? data : buffer2Stream(data)
@@ -234,6 +236,11 @@ const modCache = (req,res,next) => {
         headers:extend({'connection':'close'},req.headers,SKIP_HEADERS)
     }
     switch(t.type){
+        case 'pip':
+            if(req.path.startsWith(PYTHON_HOSTED.packages)){
+                opts.url = PYTHON_HOSTED.url+req.path.replace(PYTHON_HOSTED.packages,ES)
+            }
+            break
         case 'docker':
             opts.url = DOCKER.url + req.path
             if(req.path.includes('blobs')){
@@ -250,7 +257,7 @@ const modCache = (req,res,next) => {
     proxy(reponame, opts, req, res).catch(err => MOD_ERR_HANDLERS[t.type] ? MOD_ERR_HANDLERS[t.type](err,req,res,next) : next(err))
 }
 
-app.use('/repository/:name', checkCache, modCache)
+app.use(`${REPOBASE}/:name`, checkCache, modCache)
 
 app.post('/files',upload.array('files'),(req,res,next) => {
     res.sendStatus(200)
@@ -321,6 +328,7 @@ const walk = (dir,func) => {
     })
 }
 app.post('/rebuild/:name',(req,res,next) => {
+    logger.info(`rebuilding repo: ${req.params.name}`)
     const files = []
     walk(path.join(repopath,req.params.name), file => files.push({filename:file,reponame:req.params.name,md5:md5Hash.sync(file)}))
     db.transaction(data => data.forEach(d => addFile.run(d)))(files)
