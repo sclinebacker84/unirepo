@@ -9,7 +9,7 @@ yum install epel-release centos-release-scl -y
 ```
 - install yum libraries
 ```
-yum install mono-complete java-1.8.0-openjdk-devel jq openssl wget unzip sysvinit-tools initscripts file clamav clamd psmisc udftools c-ares wireshark wkhtmltopdf bzip2 libsmi cups dconf p7zip p7zip-plugins xorg-x11-fonts-Type1 xorg-x11-fonts-75dpi ImageMagick ImageMagick-c++ perl qt5-qtbase-gui pulseaudio-libs-glib2 xsp git python3-tkinter net-tools docker nano make libreoffice
+yum install mono-complete java-1.8.0-openjdk-devel jq openssl wget unzip sysvinit-tools initscripts file clamav clamd psmisc udftools c-ares wireshark wkhtmltopdf bzip2 libsmi cups dconf p7zip p7zip-plugins xorg-x11-fonts-Type1 xorg-x11-fonts-75dpi ImageMagick ImageMagick-c++ perl qt5-qtbase-gui pulseaudio-libs-glib2 xsp git python3-tkinter net-tools docker nano make libreoffice kernel syslinux-extlinux kernel-devel systemd-sysv
 ```
 - install npm (just download the x64 linux tar.gz)
 - create a tmp folder, cd into it, and install npm libraries

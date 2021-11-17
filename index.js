@@ -196,9 +196,9 @@ const MOD_ERR_HANDLERS = {
             return next(err)
         }
         let h = err.response.headers[DOCKER.headers.authenticate]
-        err.response.headers[DOCKER.headers.authenticate] = err.response.headers[DOCKER.headers.authenticate].replace(DOCKER.service, DOCKER.host)
-        axios2Express(err.response,res)
         if(h){
+            err.response.headers[DOCKER.headers.authenticate] = err.response.headers[DOCKER.headers.authenticate].replace(DOCKER.service, DOCKER.host)
+            axios2Express(err.response,res)
             h = h.replace('Bearer ',ES).split(',').map(p => p.split('=').map(k => k.replaceAll('"', ES)))
             const scope = h.find(p => p[0] == 'scope')
             DOCKER.tokens.refresh(scope && scope[1]).then(() => res.end())
@@ -252,6 +252,9 @@ const modCache = (req,res,next) => {
                     opts.headers.accept = opts.headers.accept.split(CS).filter(p => !DOCKER.headers.badAccept.has(p)).join(CS)
                 }
             }
+            break
+        case 'yum':
+            opts.responseType = 'stream'
             break
     }
     proxy(reponame, opts, req, res).catch(err => MOD_ERR_HANDLERS[t.type] ? MOD_ERR_HANDLERS[t.type](err,req,res,next) : next(err))
