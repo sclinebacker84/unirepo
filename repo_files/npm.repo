@@ -1,2 +1,2 @@
 #put in ~/.npmrc
-registry=http://172.31.37.85:8080/repository/npm/
+registry=http://172.23.154.175:8080/repository/npm/

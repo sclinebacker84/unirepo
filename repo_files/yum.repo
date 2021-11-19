@@ -3,33 +3,33 @@
 #yum check-update
 
 [os]
-baseurl=http://172.31.37.85:8080/repository/yum/centos/$releasever/os/$basearch
+baseurl=http://172.23.154.175:8080/repository/yum/centos/$releasever/os/$basearch
 gpgcheck=0
 
 [centosplus]    
-baseurl=http://172.31.37.85:8080/repository/yum/centos/$releasever/centosplus/$basearch
+baseurl=http://172.23.154.175:8080/repository/yum/centos/$releasever/centosplus/$basearch
 gpgcheck=0
 
 [updates]
-baseurl=http://172.31.37.85:8080/repository/yum/centos/$releasever/updates/$basearch
+baseurl=http://172.23.154.175:8080/repository/yum/centos/$releasever/updates/$basearch
 gpgcheck=0
 
 [extras]
-baseurl=http://172.31.37.85:8080/repository/yum/centos/$releasever/extras/$basearch
+baseurl=http://172.23.154.175:8080/repository/yum/centos/$releasever/extras/$basearch
 gpgcheck=0
 
 [scl]
-baseurl=http://172.31.37.85:8080/repository/yum/centos/$releasever/sclo/$basearch/sclo
+baseurl=http://172.23.154.175:8080/repository/yum/centos/$releasever/sclo/$basearch/sclo
 gpgcheck=0
 
 [scl-rh]
-baseurl=http://172.31.37.85:8080/repository/yum/centos/$releasever/sclo/$basearch/rh
+baseurl=http://172.23.154.175:8080/repository/yum/centos/$releasever/sclo/$basearch/rh
 gpgcheck=0
 
 [epel]
-baseurl=http://172.31.37.85:8080/repository/epel/epel/$releasever/$basearch
+baseurl=http://172.23.154.175:8080/repository/epel/pub/epel/$releasever/$basearch
 gpgcheck=0
 
 [mono]
-baseurl=http://172.31.37.85:8080/repository/mono/repo/centos7-stable
+baseurl=http://172.23.154.175:8080/repository/mono/repo/centos7-stable
 gpgcheck=0

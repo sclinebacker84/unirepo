@@ -10,7 +10,7 @@ create index backups_reponame_ran_on_datetime on backups(reponame,ran_on);
 
 insert into repos(name,url,type) values 
 ('yum','http://mirror.centos.org/','yum'),
-('epel','https://mirrors.sonic.net/','yum'),
+('epel','http://download.fedoraproject.org/','yum'),
 ('mono','https://download.mono-project.com/','yum'),
 ('conda','https://repo.anaconda.com','conda'),
 ('pip','https://pypi.org/','pip'),

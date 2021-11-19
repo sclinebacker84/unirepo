@@ -120,9 +120,10 @@ class Files extends Component {
         for(const file of this.state.files){
             form.append('files',file,file.name)
         }
+        this.setState({loading:true})
         upload('files',form,{'x-group':this.state.group}).then(text => {
             alert('done')
-            this.setState({files:undefined,group:ES})
+            this.setState({files:undefined,group:ES,loading:false})
         })
     }
     render(){
@@ -155,7 +156,7 @@ class Files extends Component {
                         )
                     ),
                     h('div',{class:'btn-group-blk text-center mt-1'},
-                        h('button',{class:'btn',onClick:e => this.upload(e),disabled:!this.state.group},'Upload')
+                        h('button',{class:`btn ${this.state.loading ? 'loading' : ''}`,onClick:e => this.upload(e),disabled:!this.state.group},'Upload')
                     )
                 ]
             )

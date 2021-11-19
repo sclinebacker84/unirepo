@@ -27,7 +27,7 @@ baseurl=http://$host:$port/repository/yum/centos/$releasever/sclo/$basearch/rh
 gpgcheck=0
 
 [epel]
-baseurl=http://$host:$port/repository/epel/epel/$releasever/$basearch
+baseurl=http://$host:$port/repository/epel/pub/epel/$releasever/$basearch
 gpgcheck=0
 
 [mono]
