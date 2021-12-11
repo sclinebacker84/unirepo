@@ -14,4 +14,5 @@ insert into repos(name,url,type) values
 ('mono','https://download.mono-project.com/','yum'),
 ('conda','https://repo.anaconda.com','conda'),
 ('pip','https://pypi.org/','pip'),
-('npm','https://registry.npmjs.org/','npm')
+('npm','https://registry.npmjs.org/','npm'),
+('nux','http://mirror.li.nux.ro/li.nux.ro/nux/dextop/el7/','yum')

@@ -33,3 +33,9 @@ gpgcheck=0
 [mono]
 baseurl=http://$host:$port/repository/mono/repo/centos7-stable
 gpgcheck=0
+
+[nux]
+baseurl=http://$host:$port/repository/nux/$basearch/
+enabled=1
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-nux.ro

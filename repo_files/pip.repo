@@ -1,4 +1,4 @@
 #put this in ~/.pip/pip.conf
 [global]
-index-url = http://172.23.154.175:8080/repository/pip/simple
-trusted-host = 172.23.154.175
+index-url = http://192.168.99.92:8080/repository/pip/simple
+trusted-host = 192.168.99.92
