@@ -15,4 +15,6 @@ insert into repos(name,url,type) values
 ('conda','https://repo.anaconda.com','conda'),
 ('pip','https://pypi.org/','pip'),
 ('npm','https://registry.npmjs.org/','npm'),
-('nux','http://mirror.li.nux.ro/li.nux.ro/nux/dextop/el7/','yum')
+('nux','http://mirror.li.nux.ro/li.nux.ro/nux/dextop/el7/','yum'),
+('rocky','http://dl.rockylinux.org/pub/rocky/8/','rocky'),
+('rocky-epel','https://dl.fedoraproject.org/pub/epel/8/Everything/','rocky')

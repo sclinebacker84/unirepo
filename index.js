@@ -23,7 +23,7 @@ parser.add_argument("-l","--loglevel",{type:'str',default:'info',choices:['info'
 parser.add_argument("-c","--cacheonly",{type:'int',default:0,choices:[0,1]})
 const args = parser.parse_args()
 
-const REPO_TYPES = ['npm','yum','conda','pip']
+const REPO_TYPES = ['npm','yum','conda','pip','rocky']
 
 const ENCODING = 'utf-8'
 const TRAILING_SLASH_RE = /\/$/
@@ -106,7 +106,7 @@ logger.info('generating template files')
 glob(path.join(__dirname,'repo_files','*.template'),undefined,(e,files) => {
     files.forEach(file => {
         logger.debug(`processing template file ${file}`)
-        fs.writeFileSync(file.replace('.template', ES), fs.readFileSync(file,ENCODING).replaceAll('$host',ip.address()).replaceAll('$port',args.port))
+        fs.writeFileSync(file.replace('.template', ES), fs.readFileSync(file,ENCODING).replaceAll('$host',ip.address()).replaceAll('$port',args.port).replaceAll('$1port',args.port+1))
     })
     logger.info('generated template files')
 })
@@ -253,6 +253,7 @@ const modCache = (req,res,next) => {
                 }
             }
             break
+        case 'rocky':
         case 'yum':
             opts.responseType = 'stream'
             break
