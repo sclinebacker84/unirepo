@@ -28,6 +28,9 @@ pip install python-dateutil pyyaml pandas scikit-learn pyinstaller pyarmor simpl
 
 ## docker images
 ### install docker images, append host:port+1 to image name
+- library/rockylinux
+  - 8
+  - 8.5
 - library/centos
   - centos7
   - centos7.9.2009
