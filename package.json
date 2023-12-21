@@ -1,37 +1,6 @@
 {
-  "name": "unirepo",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/sclinebacker84/unirepo.git"
-  },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/sclinebacker84/unirepo/issues"
-  },
-  "homepage": "https://github.com/sclinebacker84/unirepo#readme",
   "dependencies": {
-    "argparse": "^2.0.1",
-    "async-exit-hook": "^2.0.1",
-    "axios": "^0.24.0",
-    "better-sqlite3": "^7.4.4",
-    "express": "^4.17.1",
-    "fs-extra": "^10.0.0",
-    "glob": "^7.2.0",
-    "ip": "^1.1.5",
-    "isstream": "^0.1.2",
-    "md5-file": "^5.0.0",
-    "moment": "^2.29.1",
-    "multer": "^1.4.3",
-    "serve-index": "^1.9.1",
-    "sha256-file": "^1.0.0",
-    "tar": "^6.1.11",
-    "winston": "^3.3.3"
+    "axios": "^1.6.2",
+    "better-sqlite3": "^9.2.2"
   }
 }

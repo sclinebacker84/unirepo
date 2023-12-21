@@ -13,7 +13,7 @@ const sha256File = require('sha256-file')
 const multer = require('multer')
 const Duplex = require('stream').Duplex
 const {ArgumentParser} = require('argparse')
-const glob = require('glob')
+const {globSync:glob} = require('glob')
 const moment = require('moment');
 const { npm } = require('winston/lib/winston/config');
 
@@ -85,10 +85,11 @@ const logger = winston.createLogger({
     level:args.loglevel
 })
 
-const dbpath = path.join(__dirname, 'repos.db')
+const dbpath = '/repos.db'
 const db = require('better-sqlite3')(dbpath)
-const repopath = path.join(__dirname, 'repos')
-const filepath = path.join(__dirname, 'files')
+
+const repopath = '/repos'
+const filepath = '/files'
 
 fs.mkdirpSync(repopath)
 fs.mkdirpSync(filepath)

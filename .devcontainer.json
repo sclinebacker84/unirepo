@@ -1,3 +1,5 @@
 {
-    "image": "unirepo"
+    "image": "unirepo",
+    "runArgs": ["--rm","--name","unirepo"],
+    "postStartCommand": "rm -rf ./node_modules && ln -srf /webapp/node_modules ./node_modules"
 }
