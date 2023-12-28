@@ -1,3 +1,0 @@
-{
-    "insecure-registries":["$host:$1port"]
-}

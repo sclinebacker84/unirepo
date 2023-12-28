@@ -1,0 +1,6 @@
+node_modules
+repos.db
+repos
+repoconfig
+files
+repo_files/*.repo
