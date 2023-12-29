@@ -9,5 +9,5 @@
 
 # running
 ```
-docker run --rm --name unirepo-client -it unirepo-client
+docker run --rm --network=host --name unirepo-client -it unirepo-client
 ```

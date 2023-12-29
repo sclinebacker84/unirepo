@@ -1,7 +1,7 @@
 ARG IMAGE
 FROM $IMAGE
 #setup rocky repo
-RUN microdnf install curl tar wget xz -y && \
+RUN microdnf install curl tar wget xz nano ncurses -y && \
 rm -rf /etc/yum.repos.d/* && \
 curl http://localhost:8080/browse/repo_files/rocky.repo > /etc/yum.repos.d/rocky.repo
 #setup npm repo

@@ -1,0 +1,14 @@
+[
+    {
+        "name":"npm",
+        "link":"https://registry.npmjs.org/"
+    },
+    {
+        "name":"pip",
+        "link":"https://pypi.org/"
+    },
+    {
+        "name":"rocky",
+        "link":"https://dl.rockylinux.org/pub/rocky/8/"
+    }
+]

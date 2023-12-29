@@ -1,5 +1,9 @@
 {
     "image": "unirepo",
-    "runArgs": ["--rm","--name","unirepo"],
-    "postStartCommand": "rm -rf ./node_modules && ln -srf /webapp/node_modules ./node_modules"
+    "runArgs": ["--rm","--name","unirepo","--network","host"],
+    "forwardPorts": [8080,8081],
+    "containerEnv": {
+        "LOGLEVEL":"debug"
+    },
+    "postStartCommand": "ln -srf /webapp/node_modules ./node_modules"
 }
