@@ -3,7 +3,10 @@ import axios from 'axios'
 import { Box } from '@mui/material'
 import { DataGrid } from '@mui/x-data-grid'
 
-const COLUMNS = ['name','link'].map((field) => ({field}))
+const COLUMNS = [
+  {field:'name',flex:1},
+  {field:'link',flex:1,renderCell:c => <a href={c.row.link} target="_blank">{c.row.link}</a>}
+]
 
 export default function App() {
   const reposLoaded = useRef(false)
