@@ -1,3 +1,0 @@
-#put this in ~/.condarc
-channels:
-  - http://$host:$port/repository/conda/pkgs/main

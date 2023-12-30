@@ -1,7 +1,7 @@
 {
     "image": "unirepo",
-    "runArgs": ["--rm","--name","unirepo","--network","host"],
-    "forwardPorts": [8080,8081],
+    "runArgs": ["--rm","--name","unirepo","--network=host"],
+    "forwardPorts": [8080,8081,8082],
     "containerEnv": {
         "LOGLEVEL":"debug"
     },

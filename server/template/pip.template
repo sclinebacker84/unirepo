@@ -1,0 +1,4 @@
+#put this in ~/.pip/pip.conf
+[global]
+index-url = http://{{HOST}}:{{PORT}}/repos/pip/simple
+trusted-host = {{HOST}}

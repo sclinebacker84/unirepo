@@ -5,10 +5,17 @@
     },
     {
         "name":"pip",
-        "link":"https://pypi.org/"
+        "link":"https://pypi.org/",
+        "packages":"https://files.pythonhosted.org/"
     },
     {
         "name":"rocky",
-        "link":"https://dl.rockylinux.org/pub/rocky/8/"
+        "link":"https://dl.rockylinux.org/pub/rocky/8/",
+        "epel":"https://dl.fedoraproject.org/pub/epel/8/Everything/"
+    },
+    {
+        "name":"docker",
+        "link":"https://registry-1.docker.io",
+        "registries":["mcr.microsoft.com"]
     }
 ]

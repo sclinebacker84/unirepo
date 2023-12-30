@@ -10,7 +10,9 @@ services:
     ports:
     - 8080:8080
     - 8081:8081
-    command: ["-l","${LOGLEVEL:-info}"]
+    environment:
+      LOGLEVEL: "${LOGLEVEL:-info}"
+      HOST: "${HOSTNAME:-localhost}"
 networks:
   unirepo:
     driver: bridge

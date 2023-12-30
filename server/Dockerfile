@@ -19,5 +19,7 @@ COPY src/ ./src/
 RUN npm run build
 #copy server files
 COPY server/ ./server/
+COPY template/ ./template/
+COPY repos.json .
 ENV PORT "8080"
 ENTRYPOINT ["node","server"]

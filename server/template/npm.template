@@ -1,0 +1,2 @@
+#put in ~/.npmrc
+registry=http://{{HOST}}:{{PORT}}/repos/npm/
