@@ -64,15 +64,24 @@ const proxyReq = async (req,res,url,extraHeaders) => {
     }
 }
 
+//get the index of the dash in a split url list
+const dashIndex = key => {
+    if(!Array.isArray(key)){
+        key = key.split('/')
+    }
+    return key.findIndex(k => k == '-')
+}
+
 //get the cache file path for a request and url
 const getCacheKey = (req,url) => {
     let key = path.join(PATHS.repos,req.params.name,url.pathname)
     switch(req.params.name){
         case 'npm': //account for npm's way of organizing their endpoints in a non-posix compliant way
             key = key.split('/')
-            const hasDash = !!key.find(k => k == '-')
-            if(hasDash){
-                key.splice(3,1)
+            const i = dashIndex(key)
+            const s = 3
+            if(i > -1){
+                key.splice(s,(i-s))
             }
             key = key.join('/')
             break
@@ -100,9 +109,9 @@ const writeFile = async (key,url,data) => {
 const postWrite = async (req,axiosRes,key,url) => {
     switch(req.params.name){
         case "pip":
-            const repo = REPOS.find(r => r.name == "pip")
             if(url.href.endsWith('/')){ //index.html file, replace host
-                fs.writeFileSync(key,fs.readFileSync(key,'utf-8').replaceAll(repo.packages,`repos/pip/`))
+                const repo = REPOS.find(r => r.name == "pip")
+                fs.writeFileSync(key,fs.readFileSync(key,'utf-8').replaceAll(repo.packages,'repos/pip/'))
             }
             break
         case 'docker':
@@ -196,6 +205,15 @@ const handleReq = async (req,res,next,handleErr) => {
 }
 
 /** endpoints */
+
+app.get('/info',(_,res) => {
+    res.send({
+        git:{
+            timestamp:process.env.GIT_TIMESTAMP,
+            hash:process.env.GIT_HASH
+        }
+    })
+})
 
 app.get(`/repos`,(_,res) => {
     res.send(REPOS)

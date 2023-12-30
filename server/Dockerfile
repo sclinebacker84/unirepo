@@ -22,4 +22,9 @@ COPY server/ ./server/
 COPY template/ ./template/
 COPY repos.json .
 ENV PORT "8080"
+#inject git info
+ARG GIT_HASH
+ARG GIT_TIMESTAMP
+ENV GIT_HASH $GIT_HASH
+ENV GIT_TIMESTAMP $GIT_TIMESTAMP
 ENTRYPOINT ["node","server"]

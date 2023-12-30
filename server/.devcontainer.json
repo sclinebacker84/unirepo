@@ -5,5 +5,9 @@
     "containerEnv": {
         "LOGLEVEL":"debug"
     },
+    "mounts": [
+        "source=${localEnv:HOME}${localEnv:USERPROFILE}/unirepo/repos,target=/repos,type=bind,consistency=cached",
+        "source=${localEnv:HOME}${localEnv:USERPROFILE}/unirepo/files,target=/files,type=bind,consistency=cached"
+    ],
     "postStartCommand": "ln -srf /webapp/node_modules ./node_modules"
 }
