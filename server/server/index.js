@@ -157,6 +157,7 @@ const getUrl = (req) => {
                 pathname = pathname.replace(RE.PIP_FIX_URL,'packages')
             }
             break
+        case "rocky9":
         case "rocky":
             if(req.url.includes('epel/')){
                 host = repo.epel
@@ -229,7 +230,8 @@ app.get(`/repos/config/:name`,(req,res) => {
 app.get(`/repos/:name/*`, async (req,res,next) => handleReq(req,res,next))
 
 for(const path in PATHS){
-    app.use('/browse/'+path,serveIndex(PATHS[path],{icons:true,view:'details'}))
+    const p = PATHS[path]
+    app.use('/browse/'+path,express.static(p),serveIndex(p,{icons:true,view:'details'}))
 }
 
 ViteExpress.listen(app, PORT)

@@ -14,6 +14,11 @@
         "epel":"https://dl.fedoraproject.org/pub/epel/8/Everything/"
     },
     {
+        "name":"rocky9",
+        "link":"https://dl.rockylinux.org/pub/rocky/9/",
+        "epel":"https://dl.fedoraproject.org/pub/epel/9/Everything/"
+    },
+    {
         "name":"docker",
         "link":"https://registry-1.docker.io",
         "registries":["mcr.microsoft.com"]

@@ -1,0 +1,30 @@
+#put this in /etc/yum.repos.d/
+#yum clean all
+#yum check-update
+
+[baseos]
+baseurl=http://{{HOST}}:{{PORT}}/repos/rocky9/BaseOS/$basearch/os
+
+[appstream]
+baseurl=http://{{HOST}}:{{PORT}}/repos/rocky9/AppStream/$basearch/os
+
+[extras]
+baseurl=http://{{HOST}}:{{PORT}}/repos/rocky9/extras/$basearch/os
+
+[plus]
+baseurl=http://{{HOST}}:{{PORT}}/repos/rocky9/plus/$basearch/os
+
+[ha]
+baseurl=http://{{HOST}}:{{PORT}}/repos/rocky9/HighAvailability/$basearch/os
+
+[rs]
+baseurl=http://{{HOST}}:{{PORT}}/repos/rocky9/ResilientStorage/$basearch/os
+
+[nfv]
+baseurl=http://{{HOST}}:{{PORT}}/repos/rocky9/NFV/$basearch/os
+
+[rt]
+baseurl=http://{{HOST}}:{{PORT}}/repos/rocky9/RT/$basearch/os
+
+[epel]
+baseurl=http://{{HOST}}:{{PORT}}/repos/rocky9/epel/$basearch

@@ -1,8 +1,6 @@
 ARG IMAGE
 FROM $IMAGE
 #prereq
-COPY repos /repos
-RUN if [ ! -z "$(ls /repos)" ]; then rm -rf /etc/yum.repos.d/*; mv /repos/* /etc/yum.repos.d/.; fi
 RUN microdnf install tar gzip xz curl wget ncurses -y
 #node
 ARG NODE
