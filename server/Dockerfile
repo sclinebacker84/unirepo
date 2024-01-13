@@ -1,13 +1,7 @@
-ARG IMAGE
-FROM $IMAGE
+FROM alpine:3.19.0
 #prereq
-RUN microdnf install tar gzip xz curl wget ncurses -y
-#node
-ARG NODE
-RUN wget $NODE --no-check-certificate -O node.tar.xz
-RUN mkdir /node && tar -xf node.tar.xz -C /node --strip-components 1 && rm node.tar.xz -f
-ENV PATH=$PATH:/node/bin
-#install node packages
+RUN apk add tar gzip xz curl wget ncurses nodejs npm
+# install node packages
 WORKDIR /webapp
 COPY package.json .
 RUN npm install

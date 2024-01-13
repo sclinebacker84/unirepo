@@ -2,9 +2,10 @@ ARG IMAGE
 FROM $IMAGE
 ENV PATH=$PATH:/node/bin:/root/miniconda3/bin
 #setup rocky repo
-RUN microdnf install curl tar wget xz nano ncurses -y && \
-rm -rf /etc/yum.repos.d/*; \
-curl --connect-timeout 2 http://localhost:8080/repos/config/rocky > /etc/yum.repos.d/rocky.repo || echo 0
+RUN rm -rf /etc/yum.repos.d/*; \
+curl --connect-timeout 2 http://localhost:8080/repos/config/rocky > /etc/yum.repos.d/rocky.repo || echo 0; \
+microdnf clean all; \
+microdnf install tar wget xz nano ncurses -y
 #setup npm repo
 ARG NODE
 RUN wget $NODE --no-check-certificate -O node.tar.xz && \

@@ -11,6 +11,7 @@ import nunjucks from 'nunjucks'
 
 const __dirname = process.cwd()
 
+const DISTDIR = path.join(__dirname,'dist')
 const REPOS = fs.readJSONSync(path.join(__dirname,'repos.json'))
 const PORT = parseInt(process.env.PORT)
 const DOCKER_PORT = PORT + 1
@@ -39,6 +40,7 @@ const PATHS = {
 }
 
 const app = express()
+const docker = express()
 
 /** functions */
 
@@ -229,13 +231,6 @@ app.get(`/repos/config/:name`,(req,res) => {
 
 app.get(`/repos/:name/*`, async (req,res,next) => handleReq(req,res,next))
 
-for(const path in PATHS){
-    const p = PATHS[path]
-    app.use('/browse/'+path,express.static(p),serveIndex(p,{icons:true,view:'details'}))
-}
-
-ViteExpress.listen(app, PORT)
-
 /** docker endpoints & functions */
 
 //return an auth token for the given scope & service
@@ -258,9 +253,7 @@ const isDockerManifest = (key) => {
     return key.includes('/manifests/')
 }
 
-const dockerServer = express()
-
-dockerServer.get('/*',async (req,res,next) => {
+docker.get('/*',async (req,res,next) => {
     if(req.url.endsWith('/v2/')){
         logger.debug('skipping dummy docker request')
         return res.sendStatus(200)
@@ -275,4 +268,25 @@ dockerServer.get('/*',async (req,res,next) => {
     })
 })
 
-dockerServer.listen(DOCKER_PORT, () => logger.info(`started docker server on port: ${DOCKER_PORT}`))
+/** starter functions */
+
+const startMain = () => {
+    for(const path in PATHS){
+        const p = PATHS[path]
+        app.use('/browse/'+path,express.static(p),serveIndex(p,{icons:true,view:'details'}))
+    }
+    
+    if(fs.pathExistsSync(DISTDIR)){
+        app.use(express.static(DISTDIR))
+        app.listen(PORT,() => logger.info(`running in production on port: ${PORT}`))
+    }else{
+        ViteExpress.listen(app, PORT)
+    }
+}
+
+const startDocker = () => {
+    docker.listen(DOCKER_PORT, () => logger.info(`started docker server on port: ${DOCKER_PORT}`))
+}
+
+startMain()
+startDocker()

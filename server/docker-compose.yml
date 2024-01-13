@@ -11,7 +11,7 @@ services:
     - 8080:8080
     - 8081:8081
     environment:
-      LOGLEVEL: "${LOGLEVEL:-info}"
+      LOGLEVEL: "${LOGLEVEL:-debug}"
       HOST: "${HOSTNAME:-localhost}"
 networks:
   unirepo:
