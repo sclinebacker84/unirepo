@@ -289,4 +289,7 @@ const startDocker = () => {
 }
 
 startMain()
-startDocker()
+
+if(process.env.RUN_DOCKER == '1'){
+    startDocker()
+}
