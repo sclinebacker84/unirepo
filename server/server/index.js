@@ -31,7 +31,8 @@ const logger = winston.createLogger({
 const RE = {
     BASE_REPO_URL:/^\/repos\/.*?\//,
     PIP_FIX_URL:/.*?\/packages/,
-    TRAILING_SLASH:/\/$/
+    TRAILING_SLASH:/\/$/,
+    REPO_SUB:/sub_(.+?)\//
 }
 
 const PATHS = {
@@ -159,11 +160,13 @@ const getUrl = (req) => {
                 pathname = pathname.replace(RE.PIP_FIX_URL,'packages')
             }
             break
+        case "centos7":
         case "rocky9":
         case "rocky":
-            if(req.url.includes('epel/')){
-                host = repo.epel
-                pathname = pathname.replace('epel/','')
+            const match = req.url.match(RE.REPO_SUB)
+            if(match && match[1]){
+                host = repo[match[1]]
+                pathname = pathname.replace(match[0],'')
             }
             break
         case "docker":

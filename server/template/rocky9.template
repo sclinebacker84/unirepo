@@ -27,4 +27,4 @@ baseurl=http://{{HOST}}:{{PORT}}/repos/rocky9/NFV/$basearch/os
 baseurl=http://{{HOST}}:{{PORT}}/repos/rocky9/RT/$basearch/os
 
 [epel]
-baseurl=http://{{HOST}}:{{PORT}}/repos/rocky9/epel/$basearch
+baseurl=http://{{HOST}}:{{PORT}}/repos/rocky9/sub_epel/$basearch

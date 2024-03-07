@@ -22,5 +22,11 @@
         "name":"docker",
         "link":"https://registry-1.docker.io",
         "registries":["mcr.microsoft.com"]
+    },
+    {
+        "name":"centos7",
+        "link":"http://mirror.centos.org/centos/7/",
+        "docker":"https://download.docker.com/linux/centos/7/",
+        "epel":"https://mirror.arizona.edu/fedora-epel/7/"
     }
 ]

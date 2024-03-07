@@ -33,4 +33,4 @@ baseurl=http://{{HOST}}:{{PORT}}/repos/rocky/nfv/$basearch/os
 baseurl=http://{{HOST}}:{{PORT}}/repos/rocky/RT/$basearch/os
 
 [epel]
-baseurl=http://{{HOST}}:{{PORT}}/repos/rocky/epel/$basearch
+baseurl=http://{{HOST}}:{{PORT}}/repos/rocky/sub_epel/$basearch
